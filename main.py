@@ -27,7 +27,7 @@ df_Skin_G = pd.crosstab(df.Skin, df.G, normalize='columns')
 df_R_Skin = pd.crosstab(df.R, df.Skin, normalize='columns')
 df_Skin_R = pd.crosstab(df.Skin, df.R, normalize='columns')
 print(df_Skin_B)
-print(df_B_Skin)
+print(df_B_Skin[1][100])
 
 im = Image.open('man3.jpg')  # Can be many different formats.
 pix = im.load()
@@ -41,10 +41,12 @@ for x in range(im_w):
         G = pix[x, y][1]
         B = pix[x, y][2]
 
-        sum_of_1 = df_Skin_B[B][1] + df_Skin_G[G][1] + df_Skin_R[R][1]
+        sum_of_2 = df_B_Skin[1][B] + df_G_Skin[1][G] + df_R_Skin[1][R]
+        # print(sum_of_2)
+        # sum_of_1 = df_Skin_B[B][1] + df_Skin_G[G][1] + df_Skin_R[R][1]
         # sum_of_2 = df_Skin_B[B][2] + df_Skin_B[G][2] + df_Skin_B[R][2]
-
-        if sum_of_1 > .75:
+        # if(df_Skin_)
+        if sum_of_2 > 0.015:
             pix[x, y] = (0, 0, 0)
 
 # pix[350,300] = (0, 0, 0)  # Set the RGBA Value of the image (tuple)
