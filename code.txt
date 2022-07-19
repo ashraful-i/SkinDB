@@ -44,7 +44,7 @@ for x in range(im_w):
         sum_of_1 = df_Skin_B[B][1] + df_Skin_G[G][1] + df_Skin_R[R][1]
         # sum_of_2 = df_Skin_B[B][2] + df_Skin_B[G][2] + df_Skin_B[R][2]
 
-        if sum_of_1 > .75:
+        if sum_of_1 > .9:
             pix[x, y] = (0, 0, 0)
 
 # pix[350,300] = (0, 0, 0)  # Set the RGBA Value of the image (tuple)
