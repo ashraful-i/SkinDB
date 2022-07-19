@@ -1,22 +1,65 @@
 import pandas as pd
+from PIL import Image
 import numpy as np
 from pprint import pprint
 
 dataset = pd.read_csv('Skin_NonSkin.txt', sep='\t', names=['B', 'G', 'R', 'Skin', ])
 df = pd.DataFrame(dataset)
 # print(df)
-prob_B = pd.DataFrame(columns=["p_b"])
+prob_B = pd.DataFrame()
 prob_G = pd.DataFrame(columns=["p_g"])
 prob_R = pd.DataFrame(columns=["p_r"])
 total_prob = pd.DataFrame(columns=["total"])
-# print(df)
-skin_prob = df.groupby('Skin').size().div(len(df))
-prob_B = df.groupby(['B', 'Skin']).size().div(len(df)).div(skin_prob, axis=0, level='Skin')
-prob_G = df.groupby(['G', 'Skin']).size().div(len(df)).div(skin_prob, axis=0, level='Skin')
-prob_R = df.groupby(['R', 'Skin']).size().div(len(df)).div(skin_prob, axis=0, level='Skin')
+# print(prob_B)
+# skin_prob = df.groupby('Skin').size().div(len(df))
+# prob_B['Prob_B'] = df.groupby(['B', 'Skin']).size().div(len(df)).div(skin_prob)
+# prob_G = df.groupby(['G', 'Skin']).size().div(len(df)).div(skin_prob, axis=0, level='Skin')
+# prob_R = df.groupby(['R', 'Skin']).size().div(len(df)).div(skin_prob, axis=0, level='Skin')
 # print(prob_B)
 # print(prob_G)
 # print(prob_R)
 # frames = [prob_B, prob_G, prob_R]
 # result = pd.concat(frames, axis=1)
-print(prob_B)
+df_B_Skin = pd.crosstab(df.B, df.Skin, normalize='columns')
+df_Skin_B = pd.crosstab(df.Skin, df.B, normalize='columns')
+df_G_Skin = pd.crosstab(df.G, df.Skin, normalize='columns')
+df_Skin_G = pd.crosstab(df.Skin, df.G, normalize='columns')
+df_R_Skin = pd.crosstab(df.R, df.Skin, normalize='columns')
+df_Skin_R = pd.crosstab(df.Skin, df.R, normalize='columns')
+print(df_Skin_B)
+print(df_B_Skin)
+
+im = Image.open('man3.jpg')  # Can be many different formats.
+pix = im.load()
+print(im.size)  # Get the width and hight of the image for iterating over
+im_w = im.size[0]
+im_h = im.size[1]
+
+for x in range(im_w):
+    for y in range(im_h):
+        R = pix[x, y][0]
+        G = pix[x, y][1]
+        B = pix[x, y][2]
+
+        sum_of_1 = df_Skin_B[B][1] + df_Skin_G[G][1] + df_Skin_R[R][1]
+        # sum_of_2 = df_Skin_B[B][2] + df_Skin_B[G][2] + df_Skin_B[R][2]
+
+        if sum_of_1 > 1.1:
+            pix[x, y] = (0, 0, 0)
+
+# pix[350,300] = (0, 0, 0)  # Set the RGBA Value of the image (tuple)
+im.save('mask2.png')  # Save the modified pixels as .png
+
+'''
+print(pix[350, 300])  # Get the RGBA Value of the a pixel of an image
+R = pix[350, 300][0]
+G = pix[350, 300][1]
+B = pix[350, 300][2]
+
+print(R, G, B)
+print(df_Skin_B[B][1])
+
+
+print(sum_of_1)
+print(sum_of_2)
+'''
